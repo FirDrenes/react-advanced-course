@@ -1,12 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useDispatch} from 'react-redux';
+import { useCallback, useState } from 'react';
 import { showError } from '../../actions/error-actions';
-import { StateType } from '../../reducers/reducer';
 import { addBookToSelectionActionCreator } from '../../actions/selection-actions';
+import { BookListSelect } from './BookListSelect';
+import { SelectionListSelect } from './SelectionListSelect';
 
 const AddBookToSelectionForm = () => {
-  const books = useSelector((state: StateType) => state.books);
-  const selections = useSelector((state: StateType) => state.selections);
   const dispatch = useDispatch();
   const [bookId, setBookId] = useState('');
   const [selectionId, setSelectionId] = useState('');
@@ -19,6 +18,10 @@ const AddBookToSelectionForm = () => {
     }
   };
 
+  const handleBookSelect = useCallback((val: string) => setBookId(val), []);
+  const handleSelectionSelect = useCallback((val: string) => setSelectionId(val), [])
+  
+
   return (
     <form
       onSubmit={(e) => {
@@ -30,36 +33,12 @@ const AddBookToSelectionForm = () => {
       <div className="row">
         <div className="selection_control_item col-md-4">
           <label htmlFor="bookSelect">Add book</label>
-          <select
-            className="form-select"
-            id="bookSelect"
-            onChange={(e) => setBookId(e.target.value)}
-          >
-            <option value="">Choose a book</option>
-            {books &&
-              books.map((el, i) => (
-                <option key={i} value={el._id}>
-                  {el.title} by {el.author}
-                </option>
-              ))}
-          </select>
+          <BookListSelect onSelect={handleBookSelect} id="bookSelect"/>
         </div>
 
         <div className="selection_control_item col-md-5">
           <label htmlFor="selectionSelect">to selection</label>
-          <select
-            className="form-select"
-            id="selectionSelect"
-            onChange={(e) => setSelectionId(e.target.value)}
-          >
-            <option value="">Choose a selection</option>
-            {selections.data &&
-              selections.data.map((el, i) => (
-                <option key={i} value={el._id}>
-                  {el.title} by {el.author}
-                </option>
-              ))}
-          </select>
+          <SelectionListSelect id="selectionSelect" onSelect={handleSelectionSelect}/>
         </div>
 
         <div className="col-md-1 d-flex align-items-end">

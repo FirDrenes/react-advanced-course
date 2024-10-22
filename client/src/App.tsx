@@ -15,6 +15,9 @@ import Books from './components/Books/Books';
 import { StateType } from './reducers/reducer';
 import { fetchBooksAction } from './actions/book-actions';
 import { fetchSelectionsAction } from './actions/selection-actions';
+import { ThemeContextProvider } from './contexts/ThemeContextProvider';
+import { ThemeWrapper } from './components/theme/ThemeWrapper';
+import { SwitchTheme } from './components/theme/SwitchTheme';
 
 const App = () => {
   const selections = useSelector((state: StateType) => state.selections);
@@ -26,26 +29,29 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <div className="wrapper books_wrapper">
-        <h2 className="page_title">Books</h2>
-        <CreateBookForm />
-        <Books />
-      </div>
-      <div className="wrapper selections_wrapper">
-        <h2 className="page_title">Selections</h2>
-        <CreateSelectionForm />
-        <AddBookToSelectionForm />
-        {selections?.data.length > 0 && (
-          <Accordion>
-            {selections.data.map((el, i) => (
-              <Selection key={i} item={el} itemKey={i} />
-            ))}
-          </Accordion>
-        )}
-      </div>
-      <ErrorModal />
-    </>
+    <ThemeContextProvider>
+      <ThemeWrapper>
+      <SwitchTheme/>
+        <div className="wrapper books_wrapper">
+          <h2 className="page_title">Books</h2>
+          <CreateBookForm />
+          <Books />
+        </div>
+        <div className="wrapper selections_wrapper">
+          <h2 className="page_title">Selections</h2>
+          <CreateSelectionForm />
+          <AddBookToSelectionForm />
+          {selections?.data.length > 0 && (
+            <Accordion>
+              {selections.data.map((el, i) => (
+                <Selection key={i} item={el} itemKey={i} />
+              ))}
+            </Accordion>
+          )}
+        </div>
+        <ErrorModal />
+     </ThemeWrapper>
+     </ThemeContextProvider>
   );
 };
 
